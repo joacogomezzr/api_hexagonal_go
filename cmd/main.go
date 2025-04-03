@@ -3,9 +3,17 @@ package main
 import (
 	"log"
 
+<<<<<<< HEAD
 	"github.com/gofiber/fiber/v2"
 	"api-joaquin/config"
 	"api-joaquin/database"
+=======
+	"api-joaquin/config"
+	"api-joaquin/database"
+	"api-joaquin/pkg/middleware"
+
+	"github.com/gofiber/fiber/v2"
+>>>>>>> 8d61fe1 (c)
 
 	// Importaciones para el recurso de libros
 	bookControllers "api-joaquin/internal/book/controllers"
@@ -39,6 +47,11 @@ func main() {
 
 	// Inicializar Fiber
 	app := fiber.New()
+<<<<<<< HEAD
+=======
+	// Configurar middleware CORS
+	app.Use(middleware.SetupCORS())
+>>>>>>> 8d61fe1 (c)
 
 	// Inicializar el repositorio y el controlador para libros
 	bookRepo := bookInfrastructure.NewBookService(database.DB)

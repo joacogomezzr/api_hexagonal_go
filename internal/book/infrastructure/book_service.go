@@ -16,6 +16,7 @@ type BookService struct {
 func NewBookService(db *sql.DB) repositories.BookRepository {
 	return &BookService{DB: db}
 }
+<<<<<<< HEAD
 
 // Create agrega un nuevo libro a la base de datos.
 func (s *BookService) Create(book *domain.Book) error {
@@ -36,6 +37,34 @@ func (s *BookService) Create(book *domain.Book) error {
 	return nil
 }
 
+=======
+func (s *BookService) Create(book *domain.Book) error {
+    query := "INSERT INTO books (title, author, year) VALUES (?, ?, ?)"
+    stmt, err := s.DB.Prepare(query)
+    if err != nil {
+        log.Println("❌ Error preparando la consulta:", err)
+        return err
+    }
+    defer stmt.Close()
+
+    result, err := stmt.Exec(book.Title, book.Author, book.Year)
+    if err != nil {
+        log.Println("❌ Error ejecutando la consulta:", err)
+        return err
+    }
+
+    id, err := result.LastInsertId()
+    if err != nil {
+        log.Println("❌ Error obteniendo el ID insertado:", err)
+        return err
+    }
+
+    book.ID = id
+    log.Printf("✅ Libro insertado con ID: %d", book.ID)
+
+    return nil
+}
+>>>>>>> 8d61fe1 (c)
 // GetAll obtiene todos los libros de la base de datos.
 func (s *BookService) GetAll() ([]domain.Book, error) {
 	query := "SELECT id, title, author, year FROM books"

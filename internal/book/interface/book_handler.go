@@ -3,6 +3,10 @@ package interfaces
 import (
 	"api-joaquin/internal/book/controllers"
 	"api-joaquin/internal/book/domain"
+<<<<<<< HEAD
+=======
+	"api-joaquin/internal/book/infrastructure"
+>>>>>>> 8d61fe1 (c)
 	"database/sql"
 	"strconv"
 
@@ -37,6 +41,10 @@ func (h *BookHandler) CreateBook(c *fiber.Ctx) error {
 			"error":   err.Error(),
 		})
 	}
+<<<<<<< HEAD
+=======
+	infrastructure.SendMessageToRabbit(book)
+>>>>>>> 8d61fe1 (c)
 
 	return c.Status(201).JSON(fiber.Map{
 		"status":  "success",
@@ -88,7 +96,11 @@ func (h *BookHandler) UpdateBook(c *fiber.Ctx) error {
 		})
 	}
 
+<<<<<<< HEAD
 	book.ID = id
+=======
+	book.ID = int64(id)
+>>>>>>> 8d61fe1 (c)
 	if err := h.Controller.PutUseCase.Execute(book); err != nil {
 		if err == sql.ErrNoRows {
 			return c.Status(404).JSON(fiber.Map{
