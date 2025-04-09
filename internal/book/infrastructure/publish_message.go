@@ -19,7 +19,8 @@ func failOnError(err error, msg string) {
 
 func SendMessageToRabbit(payload *domain.Book) {
     conn, err := amqp.Dial("amqp://joaquin:123456@98.82.195.253:5672/")
-    failOnError(err, "Failed to connect to RabbitMQ")
+    failOnError(err, "Failed to connect to RabbitMQ server")
+    log.Println("Connected to RabbitMQ")
     defer conn.Close()
 
     ch, err := conn.Channel()
