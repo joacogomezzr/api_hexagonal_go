@@ -23,22 +23,16 @@ func (s *AdminService) Create(admin *domain.Admin) error {
 		return err
 	}
 	defer stmt.Close()
-<<<<<<< HEAD
 
 	_, err = stmt.Exec(admin.Name, admin.Email, admin.Password)
-=======
 	
 	result, err := stmt.Exec(admin.Name, admin.Email, admin.Password)
-	id, err := result.LastInsertId()
->>>>>>> 8d61fe1 (c)
+	id, err := result.LastInsertId()	
 	if err != nil {
 		log.Println("Error ejecutando la consulta:", err)
 		return err
 	}
-<<<<<<< HEAD
-=======
 	admin.ID = int(id)
->>>>>>> 8d61fe1 (c)
 
 	return nil
 }
@@ -90,9 +84,4 @@ func (s *AdminService) Delete(id int) error {
 
 	_, err = stmt.Exec(id)
 	return err
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8d61fe1 (c)
-pagina-web
