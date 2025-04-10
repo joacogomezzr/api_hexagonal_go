@@ -5,8 +5,11 @@ import (
 	"api-joaquin/config"
 	"api-joaquin/database"
 	"api-joaquin/pkg/middleware"
-
+	"api-joaquin/internal/book/infrastructure/adapters"
+	"os"
+	
 	"github.com/gofiber/fiber/v2"
+	"fmt"
 
 	// Importaciones para el recurso de libros
 	bookControllers "api-joaquin/internal/book/controllers"
@@ -43,10 +46,15 @@ func main() {
 	// Configurar middleware CORS
 	app.Use(middleware.SetupCORS())
 
-
+	rabbitmqUser := os.Getenv("RABBITMQ_USER")
+    rabbitmqPass := os.Getenv("RABBITMQ_PASS")
+    rabbitmqHost := os.Getenv("RABBITMQ_HOST")
+    rabbitmqPort := os.Getenv("RABBITMQ_PORT")
+	connStr := fmt.Sprintf("amqp://%s:%s@%s:%s/", rabbitmqUser, rabbitmqPass, rabbitmqHost, rabbitmqPort)
+	rabbitmqConn := adapters.NewRabbitMQAdapter(connStr)
 	// Inicializar el repositorio y el controlador para libros
 	bookRepo := bookInfrastructure.NewBookService(database.DB)
-	bookController := bookControllers.NewBookController(bookRepo)
+	bookController := bookControllers.NewBookController(bookRepo, rabbitmqConn)
 	bookHandler := bookInterfaces.NewBookHandler(bookController)
 
 	// Inicializar el repositorio y el controlador para administradores

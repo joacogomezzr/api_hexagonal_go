@@ -14,9 +14,9 @@ type BookController struct {
 }
 
 // inicializar el controlador con las dependencias.
-func NewBookController(repo repositories.BookRepository) *BookController {
+func NewBookController(repo repositories.BookRepository, rabbitMQ repositories.RabbitMQRepository ) *BookController {
 	return &BookController{
-		PostUseCase:   application.NewBookPostUseCase(repo),
+		PostUseCase:   application.NewBookPostUseCase(repo, rabbitMQ),
 		GetUseCase:    application.NewBookGetUseCase(repo),
 		PutUseCase:    application.NewBookPutUseCase(repo),
 		DeleteUseCase: application.NewBookDeleteUseCase(repo),

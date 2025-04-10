@@ -3,7 +3,6 @@ package interfaces
 import (
 	"api-joaquin/internal/book/controllers"
 	"api-joaquin/internal/book/domain"
-	"api-joaquin/internal/book/infrastructure"
 	"database/sql"
 	"strconv"
 
@@ -38,8 +37,6 @@ func (h *BookHandler) CreateBook(c *fiber.Ctx) error {
 			"error":   err.Error(),
 		})
 	}
-	infrastructure.SendMessageToRabbit(book)
-
 
 	return c.Status(201).JSON(fiber.Map{
 		"status":  "success",
