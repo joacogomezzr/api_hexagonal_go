@@ -16,37 +16,38 @@ type BookService struct {
 func NewBookService(db *sql.DB) repositories.BookRepository {
 	return &BookService{DB: db}
 }
+
 // Create agrega un nuevo libro a la base de datos.
-
 func (s *BookService) Create(book *domain.Book) error {
-    query := "INSERT INTO books (title, author, year) VALUES (?, ?, ?)"
-    stmt, err := s.DB.Prepare(query)
-    if err != nil {
-        log.Println("❌ Error preparando la consulta:", err)
-        return err
-    }
-    defer stmt.Close()
+	query := "INSERT INTO books (title, author, year, recommendable) VALUES (?, ?, ?, ?)"
+	stmt, err := s.DB.Prepare(query)
+	if err != nil {
+		log.Println("❌ Error preparando la consulta:", err)
+		return err
+	}
+	defer stmt.Close()
 
-    result, err := stmt.Exec(book.Title, book.Author, book.Year)
-    if err != nil {
-        log.Println("❌ Error ejecutando la consulta:", err)
-        return err
-    }
+	result, err := stmt.Exec(book.Title, book.Author, book.Year, book.Recommendable)
+	if err != nil {
+		log.Println("❌ Error ejecutando la consulta:", err)
+		return err
+	}
 
-    id, err := result.LastInsertId()
-    if err != nil {
-        log.Println("❌ Error obteniendo el ID insertado:", err)
-        return err
-    }
+	id, err := result.LastInsertId()
+	if err != nil {
+		log.Println("❌ Error obteniendo el ID insertado:", err)
+		return err
+	}
 
-    book.ID = int64(id)
-    log.Printf("✅ Libro insertado con ID: %d", book.ID)
+	book.ID = int64(id)
+	log.Printf("✅ Libro insertado con ID: %d", book.ID)
 
-    return nil
+	return nil
 }
+
 // GetAll obtiene todos los libros de la base de datos.
 func (s *BookService) GetAll() ([]domain.Book, error) {
-	query := "SELECT id, title, author, year FROM books"
+	query := "SELECT id, title, author, year, recommendable FROM books"
 	rows, err := s.DB.Query(query)
 	if err != nil {
 		log.Println("❌ Error consultando los libros:", err)
@@ -57,7 +58,7 @@ func (s *BookService) GetAll() ([]domain.Book, error) {
 	var books []domain.Book
 	for rows.Next() {
 		var book domain.Book
-		if err := rows.Scan(&book.ID, &book.Title, &book.Author, &book.Year); err != nil {
+		if err := rows.Scan(&book.ID, &book.Title, &book.Author, &book.Year, &book.Recommendable); err != nil {
 			log.Println("❌ Error escaneando fila:", err)
 			return nil, err
 		}
@@ -66,9 +67,9 @@ func (s *BookService) GetAll() ([]domain.Book, error) {
 
 	return books, nil
 }
-// Update actualiza un libro en la base de datos.
+
 func (s *BookService) Update(book *domain.Book) error {
-	query := "UPDATE books SET title = ?, author = ?, year = ? WHERE id = ?"
+	query := "UPDATE books SET title = ?, author = ?, year = ?, recommendable = ? WHERE id = ?"
 	stmt, err := s.DB.Prepare(query)
 	if err != nil {
 		log.Println("❌ Error preparando la actualización:", err)
@@ -76,7 +77,7 @@ func (s *BookService) Update(book *domain.Book) error {
 	}
 	defer stmt.Close()
 
-	result, err := stmt.Exec(book.Title, book.Author, book.Year, book.ID)
+	result, err := stmt.Exec(book.Title, book.Author, book.Year, book.Recommendable, book.ID)
 	if err != nil {
 		log.Println("❌ Error ejecutando la actualización:", err)
 		return err
